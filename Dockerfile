@@ -15,8 +15,9 @@ RUN yarn install
 
 RUN npx prisma generate
 
-RUN prisma db push
 
 COPY . ./
 
-CMD [ "yarn", "dev" ]
+CMD ["./wait-for-it.sh", "db:5432", "--", "npx", "prisma", "db", "push"]
+
+# CMD [ "yarn", "dev" ]

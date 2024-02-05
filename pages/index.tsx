@@ -37,6 +37,7 @@ export default function Home() {
   
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPage(1);
     executeSearch();
   };
 
