@@ -7,13 +7,13 @@ WORKDIR /home/node/app/
 COPY package.json ./
 COPY yarn.lock ./
 
-RUN npm install -g yarn
+RUN npm install -g yarn --force
 
 RUN npm install -g prisma
 
 RUN yarn install
 
-RUN prisma generate
+RUN npx prisma generate
 
 COPY . ./
 
