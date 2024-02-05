@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "target": "esnext",
     "module": "commonjs",
     "strict": true,
@@ -9,9 +13,24 @@
     "moduleResolution": "node",
     "isolatedModules": true,
     "jsx": "preserve",
-    "lib": ["dom", "es2017"],
-    "types": ["@types/node", "@types/react"]
+    "lib": [
+      "dom",
+      "es2017"
+    ],
+    "types": [
+      "@types/node",
+      "@types/react"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "resolveJsonModule": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

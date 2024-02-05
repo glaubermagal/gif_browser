@@ -25,7 +25,7 @@ export default function Home() {
       limit: itemsPerPage
     });
 
-    setMaximumNumberOfPages(gifResults?.pagination.total_count / itemsPerPage);
+    setMaximumNumberOfPages(gifResults?.pagination?.total_count / itemsPerPage);
 
     setSearchHistory(gifResults?.searchHistory);
     setGifList(gifResults?.data);

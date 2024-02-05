@@ -13,6 +13,8 @@ RUN npm install -g prisma
 
 RUN yarn install
 
+RUN prisma generate
+
 COPY . ./
 
 CMD [ "yarn", "dev" ]
