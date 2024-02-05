@@ -1,40 +1,58 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import { Inter } from "next/font/google";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import gifs from "../helpers/api/gifs";
+import useSWR from 'swr';
+
 
 const inter = Inter({ subsets: ["latin"] });
+const fetcher = (...args: any) => fetch(...args).then((res) => res.json());
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
   const [gifList, setGifList] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
-  const itemsPerPage = 10;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+  const [maximumNumberOfPages, setMaximumNumberOfPages] = useState<number>();
+
+  const { data: history } = useSWR(
+    `/api/gif/history?query=${query}&offset=${(page - 1) * itemsPerPage}&limit=${itemsPerPage}`,
+    fetcher
+  );
+
+  const executeSearch = async () => {
+    setLoading(true);
+    const gifResults = await gifs.search({ 
+      q: query,
+      offset: (page - 1) * itemsPerPage, 
+      limit: itemsPerPage
+    });
+
+    console.log(gifResults);
+    setMaximumNumberOfPages(gifResults?.pagination.total_count / itemsPerPage)
+
+    setGifList(gifResults?.data);
+    setLoading(false);
+  }
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    
+    executeSearch();
   };
 
   useEffect(() => {
-    const executeSearch = async () => {
-      const gifResults = await gifs.search({ 
-        q: query,
-        offset: (page - 1) * itemsPerPage, 
-        limit: itemsPerPage
-      });
-  
-      setGifList(gifResults?.data);
-    }
-
     executeSearch();
-  }, [query, page])
+  }, [page, itemsPerPage])
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setPage(1);
   };
 
   return (
@@ -46,22 +64,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <div className={styles.description}>
-          <p>
-            Gif Browser
-          </p>
-        </div>
-
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-        }}>
+        <div className={styles.content}>
           <h1>Search for GIFs</h1>
 
-          <form onSubmit={handleSearch}>
+          <form onSubmit={handleSearch} className={styles.searchForm}>
             <input
               type="text"
               value={query}
@@ -71,35 +77,43 @@ export default function Home() {
             <button type="submit">Search</button>
           </form>
 
-          {gifList?.length > 0 && (
+          {loading && <div className={styles.loadingMessage}>Loading...</div>}
+
+          {!loading && gifList?.length > 0 && (
             <div>
-              <div>
+              <div className={styles.searchContainer}>
                 {gifList.map((gif) => (
-                  <img key={gif.id} src={gif.images.original.url} />
+                  <img className={styles.gif} key={gif.id} src={gif.images.original.url} />
                 ))}
               </div>
 
-              <div style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+              <div className={styles.paginationButtons}>
                 <button disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
                   Previous
                 </button>
-                <span>Page {page}</span>
-                <button onClick={() => handlePageChange(page + 1)}>
+                <span style={{ margin: '10px' }}>Page {page}</span>
+                <button disabled={page === maximumNumberOfPages} onClick={() => handlePageChange(page + 1)}>
                   Next
                 </button>
+
+                <span style={{ margin: '10px' }}>Items per page:</span>
+                <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className={styles.itemsPerPageSelector}>
+                  <option value={12}>12</option>
+                  <option value={24}>24</option>
+                  <option value={36}>36</option>
+                </select>
               </div>
+            </div>
+          )}
+
+          {!loading && gifList?.length === 0 && (
+            <div>
+              not found
             </div>
           )}
         </div>
 
-        <div className={styles.grid}>
-          
-        </div>
+        <div className={styles.grid}></div>
       </main>
     </>
   );

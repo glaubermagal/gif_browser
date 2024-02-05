@@ -20,10 +20,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<GiphyApiResponse>,
 ) {
-  // if (req.method !== 'POST') {
-  //   return res.status(405).json({ error: 'Method not allowed' });
-  // }
-
   const { q, offset = 0, limit = 25, rating = "g", lang = "en", bundle = "messaging_non_clips" } = req.query;
   const apiKey = process.env.GIPHY_API_KEY;
 
@@ -42,7 +38,7 @@ export default async function handler(
       },
     });
 
-    if (!existingSearch) {
+    if (!existingSearch && q) {
       await prisma.searchHistory.create({
         data: {
           query: q as string,
