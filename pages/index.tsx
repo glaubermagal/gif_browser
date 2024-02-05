@@ -1,9 +1,8 @@
-import styles from "@/styles/Home.module.css";
+import styles from "../styles/Home.module.css";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import gifs from "../helpers/api/gifs";
-import useSWR from 'swr';
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,7 +14,7 @@ export default function Home() {
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [itemsPerPage, setItemsPerPage] = useState<number>(12);
-  const [maximumNumberOfPages, setMaximumNumberOfPages] = useState<number>();
+  const [numberOfPages, setNumberOfPages] = useState<number>();
 
   const executeSearch = async () => {
     setLoading(true);
@@ -25,7 +24,7 @@ export default function Home() {
       limit: itemsPerPage
     });
 
-    setMaximumNumberOfPages(gifResults?.pagination?.total_count / itemsPerPage);
+    setNumberOfPages(Math.ceil(gifResults?.pagination?.total_count / itemsPerPage));
 
     setSearchHistory(gifResults?.searchHistory);
     setGifList(gifResults?.data);
@@ -92,12 +91,11 @@ export default function Home() {
                 <button disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
                   Previous
                 </button>
-                <span style={{ margin: '10px' }}>Page {page}</span>
-                <button disabled={page === maximumNumberOfPages} onClick={() => handlePageChange(page + 1)}>
+                <span style={{ margin: '10px' }}>{page}/{numberOfPages}</span>
+                <button disabled={page === numberOfPages} onClick={() => handlePageChange(page + 1)}>
                   Next
                 </button>
 
-                <span style={{ margin: '10px' }}>Items per page:</span>
                 <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className={styles.itemsPerPageSelector}>
                   <option value={12}>12</option>
                   <option value={24}>24</option>
