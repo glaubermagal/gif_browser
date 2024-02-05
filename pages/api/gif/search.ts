@@ -36,11 +36,19 @@ export default async function handler(
       throw new Error(`GIPHY API request failed with status: ${giphyResponse.status}`);
     }
 
-    await prisma.searchHistory.create({
-      data: {
+    const existingSearch = await prisma.searchHistory.findFirst({
+      where: {
         query: q as string,
       },
     });
+
+    if (!existingSearch) {
+      await prisma.searchHistory.create({
+        data: {
+          query: q as string,
+        },
+      });
+    }
 
     const data = await giphyResponse.json();
     res.status(200).json(data);

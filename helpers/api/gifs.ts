@@ -1,9 +1,9 @@
 import api from '.';
 
-const search = (query: string): Promise<any> => {
+const search = (params: any): Promise<any> => {
   return api.get('gif/search', {
     params: {
-      q: query,
+      ...params
     },
   });
 };

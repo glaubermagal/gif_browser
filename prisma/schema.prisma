@@ -19,7 +19,7 @@ datasource db {
 
 model SearchHistory {
   id       Int      @id @default(autoincrement())
-  query    String
+  query    String   @unique
   timestamp DateTime @default(now())
 
   // userId   Int
