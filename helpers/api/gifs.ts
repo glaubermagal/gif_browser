@@ -8,11 +8,11 @@ const search = (params: any): Promise<any> => {
   });
 };
 
-const history = (): Promise<any> => {
-  return api.get('gif/history');
+const clearHistory = (): Promise<any> => {
+  return api.get('gif/clear-history');
 };
 
 export default {
   search,
-  history
+  clearHistory
 };

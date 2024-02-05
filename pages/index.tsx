@@ -7,20 +7,15 @@ import useSWR from 'swr';
 
 
 const inter = Inter({ subsets: ["latin"] });
-const fetcher = (...args: any) => fetch(...args).then((res) => res.json());
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
   const [gifList, setGifList] = useState<any[]>([]);
+  const [searchHistory, setSearchHistory] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [itemsPerPage, setItemsPerPage] = useState<number>(12);
   const [maximumNumberOfPages, setMaximumNumberOfPages] = useState<number>();
-
-  const { data: history } = useSWR(
-    `/api/gif/history?query=${query}&offset=${(page - 1) * itemsPerPage}&limit=${itemsPerPage}`,
-    fetcher
-  );
 
   const executeSearch = async () => {
     setLoading(true);
@@ -30,21 +25,21 @@ export default function Home() {
       limit: itemsPerPage
     });
 
-    console.log(gifResults);
-    setMaximumNumberOfPages(gifResults?.pagination.total_count / itemsPerPage)
+    setMaximumNumberOfPages(gifResults?.pagination.total_count / itemsPerPage);
 
+    setSearchHistory(gifResults?.searchHistory);
     setGifList(gifResults?.data);
     setLoading(false);
   }
-
+  
+  useEffect(() => {
+    executeSearch();
+  }, [page, itemsPerPage])
+  
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     executeSearch();
   };
-
-  useEffect(() => {
-    executeSearch();
-  }, [page, itemsPerPage])
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -53,6 +48,11 @@ export default function Home() {
   const handleItemsPerPageChange = (newItemsPerPage: number) => {
     setItemsPerPage(newItemsPerPage);
     setPage(1);
+  };
+
+  const handleClearSearchHistory = async () => {
+    await gifs.clearHistory();
+    setSearchHistory([]);
   };
 
   return (
@@ -73,8 +73,9 @@ export default function Home() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter your search query"
+              className={styles.searchInput}
             />
-            <button type="submit">Search</button>
+            <button className={styles.searchButton} type="submit">Search</button>
           </form>
 
           {loading && <div className={styles.loadingMessage}>Loading...</div>}
@@ -106,11 +107,25 @@ export default function Home() {
             </div>
           )}
 
-          {!loading && gifList?.length === 0 && (
+          {!loading && query && gifList?.length === 0 && (
             <div>
               not found
             </div>
           )}
+
+            <div className={styles.searchHistory}>
+              <h2>Search History</h2>
+              {searchHistory?.length > 0 ? (
+                <ul>
+                  {searchHistory?.map((item: any) => (
+                    <li key={item.id}>{item.query}</li>
+                  ))}
+                </ul>
+              ) : (
+                <div>No search history</div>
+              )}
+              <button onClick={handleClearSearchHistory} className={styles.cleanSearchHistoryButton}>Clear Search History</button>
+            </div>
         </div>
 
         <div className={styles.grid}></div>

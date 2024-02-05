@@ -15,6 +15,29 @@
   margin-bottom: 20px;
 }
 
+.searchButton {
+  margin: 5px;
+  padding: 8px;
+  background-color: #6ae73c;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.searchButton:hover {
+  background-color: #56c22d;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 200px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
 .loadingMessage {
   margin: 10px;
 }
@@ -34,14 +57,53 @@
 
 .paginationButtons button {
   margin: 5px;
+  padding: 10px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .itemsPerPageSelector {
   margin: 5px;
+  padding: 8px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.searchHistory ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.searchHistory ul li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+}
+
+.cleanSearchHistoryButton {
+  margin: 5px;
+  padding: 8px;
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cleanSearchHistoryButton:hover {
+  background-color: #c0392b;
 }
 
 .gif {
-  width: calc(100% / 3);;
+  width: calc(100% / 3);
 }
 
 .main {

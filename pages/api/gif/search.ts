@@ -46,8 +46,17 @@ export default async function handler(
       });
     }
 
+    const searchHistory = await prisma.searchHistory.findMany({
+      orderBy: {
+        timestamp: "desc",
+      }
+    });
+
     const data = await giphyResponse.json();
-    res.status(200).json(data);
+    res.status(200).json({
+      ...data,
+      searchHistory,
+    });
   } catch (error) {
     console.error("Error fetching data from GIPHY API:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
