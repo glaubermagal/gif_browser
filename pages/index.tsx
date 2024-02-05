@@ -91,12 +91,11 @@ export default function Home() {
                 <button disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
                   Previous
                 </button>
-                <span style={{ margin: '10px' }}>Page {page}</span>
+                <span style={{ margin: '10px' }}>{page}/{numberOfPages}</span>
                 <button disabled={page === numberOfPages} onClick={() => handlePageChange(page + 1)}>
                   Next
                 </button>
 
-                <span style={{ margin: '10px' }}>Items per page:</span>
                 <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className={styles.itemsPerPageSelector}>
                   <option value={12}>12</option>
                   <option value={24}>24</option>
