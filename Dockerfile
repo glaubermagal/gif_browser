@@ -7,11 +7,9 @@ WORKDIR /home/node/app/
 COPY package.json ./
 COPY yarn.lock ./
 
-RUN npm install -g yarn
-
 RUN npm install -g prisma
 
-RUN yarn install
+RUN npm install
 
 RUN prisma generate
 
