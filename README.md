@@ -53,7 +53,9 @@ docker-compose up
 
 ## Configuration
 
-You can customize the application by modifying the environment variables in the `.env` file. See [`.env.example`](.env.example) for an example.
+You can customize the application by modifying the environment variables in the `.env` file. See [`.env.example`](.env.example) for an example. 
+
+Set up your GIPHY API key in the `.env` file as GIPHY_API_KEY.
 
 ## TODO
 
