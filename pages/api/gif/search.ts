@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 
@@ -38,7 +37,7 @@ export default async function handler(
       },
     });
 
-    if (!existingSearch && q) {
+    if (!existingSearch && parseInt(offset as string, 10) === 0 && q) {
       await prisma.searchHistory.create({
         data: {
           query: q as string,
