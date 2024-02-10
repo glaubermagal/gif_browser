@@ -18,6 +18,6 @@ RUN npx prisma generate
 
 COPY . ./
 
-CMD ["./wait-for-it.sh", "db:5432", "--", "npx", "prisma", "db", "push"]
+CMD ["./wait-for-it.sh", "db:5432", "--", "npx", "prisma", "migrate", "dev"]
 
 # CMD [ "yarn", "dev" ]
